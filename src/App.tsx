@@ -12,7 +12,18 @@ import {
   Target,
   UserPlus,
   BarChart3,
-  Trash2
+  Trash2,
+  Crown,
+  Sparkles,
+  Zap,
+  Activity,
+  TrendingUp,
+  Wallet,
+  AlertTriangle,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  BarChart4
 } from "lucide-react";
 import { 
   AreaChart, 
@@ -91,7 +102,7 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void; key?: string }) => {
             className="mt-6 text-slate-500 font-mono tracking-[0.4em] uppercase text-[10px] flex items-center justify-center gap-4"
           >
             <span className="h-px w-6 bg-slate-800"></span>
-            MADE BY <span className="text-primary italic font-bold">JAY SHANKAR</span>
+            BY <span className="text-primary italic font-bold">JAY SHANKAR</span>
             <span className="h-px w-6 bg-slate-800"></span>
           </motion.p>
         </motion.div>
@@ -128,8 +139,8 @@ const Navbar = ({ activeTab, setActiveTab, onProfileClick }: { activeTab: string
           <span className="text-xl font-black tracking-tighter text-gradient-yb leading-none">
             PARCELPULSE
           </span>
-          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest ml-0.5 leading-none mt-1">
-            By Jay Shankar
+          <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest ml-0.5 leading-none mt-1">
+            BY JAY SHANKAR
           </span>
         </div>
       </div>
@@ -159,7 +170,7 @@ const Navbar = ({ activeTab, setActiveTab, onProfileClick }: { activeTab: string
         </div>
         <div className="w-10 h-10 rounded-full border-2 border-primary/50 p-0.5 group-hover:border-primary transition-all">
           <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center shadow-lg transition-transform group-hover:scale-95">
-            <span className="text-xs font-bold">ST</span>
+            <span className="text-xs font-bold text-white">ST</span>
           </div>
         </div>
       </div>
@@ -264,12 +275,145 @@ const SuccessRing = ({ percentage }: { percentage: number }) => {
   );
 };
 
+const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: number }) => {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    let start = 0;
+    const end = value;
+    if (start === end) {
+      setCount(end);
+      return;
+    };
+    
+    let totalMiliseconds = duration * 1000;
+    let incrementTime = (totalMiliseconds / end) > 10 ? (totalMiliseconds / end) : 10;
+    
+    let timer = setInterval(() => {
+      start += Math.ceil(end / (totalMiliseconds / 50));
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
+    }, 50);
+    
+    return () => clearInterval(timer);
+  }, [value, duration]);
+
+  return <span>{count.toLocaleString()}</span>;
+};
+
+const RiderOfTheWeek = ({ rider }: { rider: any }) => {
+  if (!rider) return null;
+
+  const stats = rider.history?.[0] || { rate: 0, total: 0, delivered: 0, failed: 0 };
+  const earnings = (stats.delivered || 0) * 40;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="relative group col-span-full"
+    >
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-primary rounded-[2.5rem] opacity-30 blur group-hover:opacity-50 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+      <div className="relative glass-card bg-slate-900 p-8 flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden">
+        {/* Shine effect */}
+        <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent via-white/5 to-transparent group-hover:animate-shine" />
+        
+        <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+          <div className="relative">
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-4 border border-dashed border-amber-500/30 rounded-full"
+            />
+            <div className="w-32 h-32 rounded-full border-4 border-amber-500 p-1 relative shadow-[0_0_50px_rgba(245,158,11,0.3)]">
+              <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center overflow-hidden border-2 border-white/10">
+                <span className="text-4xl font-black text-amber-500">{rider.name.charAt(0)}</span>
+              </div>
+              <motion.div 
+                animate={{ y: [-5, 5, -5] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-6 left-1/2 -translate-x-1/2"
+              >
+                <Crown className="w-10 h-10 text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.8)] fill-amber-400/20" />
+              </motion.div>
+            </div>
+          </div>
+
+          <div className="text-center md:text-left space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full">
+              <Trophy className="w-3 h-3 text-amber-400" />
+              <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">Rider Of The Week</span>
+            </div>
+            <h3 className="text-4xl font-display font-black text-white tracking-tight italic uppercase">{rider.name}</h3>
+            <p className="text-slate-400 text-sm font-medium">Chamba Hub • Elite Protocol Active</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6 relative z-10 w-full md:w-auto">
+          <div className="text-center md:text-right">
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Success Rate</p>
+            <p className="text-2xl font-black text-white glow-text">{stats.rate.toFixed(1)}%</p>
+          </div>
+          <div className="text-center md:text-right border-l border-white/10 pl-6">
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Deliveries</p>
+            <p className="text-2xl font-black text-white">{stats.total}</p>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const TodaySummary = ({ stats }: { stats: any }) => {
+  const cards = [
+    { title: "Total Deliveries", value: stats.delivered, icon: Package, color: "primary", subtitle: "Parcels Dropped" },
+    { title: "Failed Parcels", value: stats.failed, icon: XCircle, color: "failure", subtitle: "Needs Review" },
+    { title: "Best Rider", value: stats.bestRider, icon: Trophy, color: "accent", subtitle: stats.bestRiderRate + "% Success" },
+    { title: "Team Success", value: stats.avgRate.toFixed(1) + "%", icon: TrendingUp, color: "success", subtitle: "Operational Efficiency" },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {cards.map((card, idx) => (
+        <motion.div
+          key={card.title}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: idx * 0.1 }}
+          whileHover={{ scale: 1.05 }}
+          className="glass-card p-4 group"
+        >
+          <div className={cn(
+            "w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110",
+            card.color === "primary" ? "bg-blue-500/10 text-blue-400" :
+            card.color === "success" ? "bg-emerald-500/10 text-emerald-400" :
+            card.color === "failure" ? "bg-rose-500/10 text-rose-400" :
+            "bg-orange-500/10 text-orange-400"
+          )}>
+            <card.icon className="w-5 h-5" />
+          </div>
+          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{card.title}</p>
+          <p className="text-xl font-black text-white mt-1">
+            {typeof card.value === 'number' ? <AnimatedCounter value={card.value} /> : card.value}
+          </p>
+          <p className="text-[10px] text-slate-600 font-medium italic mt-1">{card.subtitle}</p>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
 // --- Main Views ---
 
 const RiderDashboard = () => {
-  const [total, setTotal] = useState<string>("");
-  const [delivered, setDelivered] = useState<string>("");
+  const [total, setTotal] = useState<string>(() => localStorage.getItem('sim_total') || "");
+  const [delivered, setDelivered] = useState<string>(() => localStorage.getItem('sim_delivered') || "");
   const [randomMsg, setRandomMsg] = useState(SMART_MESSAGES[0]);
+  const [isSaved, setIsSaved] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -277,6 +421,16 @@ const RiderDashboard = () => {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    setIsSaved(false);
+    const timer = setTimeout(() => {
+      localStorage.setItem('sim_total', total);
+      localStorage.setItem('sim_delivered', delivered);
+      setIsSaved(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [total, delivered]);
 
   const stats = useMemo(() => {
     const t = parseFloat(total) || 0;
@@ -293,18 +447,30 @@ const RiderDashboard = () => {
   }, [total, delivered]);
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-8 grid lg:grid-cols-12 gap-4">
+    <div className="max-w-[1400px] mx-auto px-4 py-8 grid lg:grid-cols-12 gap-6 relative">
+      <div className="absolute top-2 right-4 flex items-center gap-1.5 opacity-60">
+        <div className={cn("w-1.5 h-1.5 rounded-full", isSaved ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : "bg-amber-500 animate-pulse")} />
+        <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+          {isSaved ? "Data Saved" : "Saving..."}
+        </span>
+      </div>
+      
       {/* Sidebar: Calculator */}
-      <div className="lg:col-span-3 space-y-4">
-        <div className="glass-card p-6 flex flex-col gap-6 backdrop-blur-md min-h-[450px]">
-          <div className="space-y-1">
-            <h2 className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em]">Parcel Simulation</h2>
-            <p className="text-slate-400 text-[11px] font-medium italic">Precision Earnings Simulation</p>
+      <div className="lg:col-span-3 space-y-6">
+        <div className="glass-card p-6 flex flex-col gap-6 backdrop-blur-xl border-white/5 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-primary/10 transition-colors" />
+          
+          <div className="space-y-1 relative z-10">
+            <div className="flex items-center gap-2">
+              <Zap className="w-3 h-3 text-blue-400 fill-blue-400/20" />
+              <h2 className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em]">Operational Simulator</h2>
+            </div>
+            <p className="text-slate-500 text-[11px] font-medium italic">Predict your performance & earnings</p>
           </div>
           
-          <div className="space-y-6 flex-1">
-            <div className="relative group">
-              <label className="absolute left-4 -top-2 text-[9px] px-1 bg-background text-blue-400 font-bold uppercase tracking-widest z-10 transition-colors group-focus-within:text-white">TOTAL PARCELS</label>
+          <div className="space-y-8 flex-1 relative z-10">
+            <div className="relative group/input">
+              <label className="absolute left-4 -top-2 text-[8px] px-2 bg-slate-950 text-blue-400 font-black uppercase tracking-[0.2em] z-10 transition-colors group-focus-within/input:text-white border border-white/5 rounded">TOTAL PARCELS</label>
               <input 
                 type="number" 
                 min="0"
@@ -320,11 +486,11 @@ const RiderDashboard = () => {
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
                 placeholder="Enter total parcels" 
-                className="futuristic-input w-full text-base"
+                className="futuristic-input w-full text-lg font-black"
               />
             </div>
-            <div className="relative group">
-              <label className="absolute left-4 -top-2 text-[9px] px-1 bg-background text-blue-400 font-bold uppercase tracking-widest z-10 transition-colors group-focus-within:text-white">DELIVERED PARCELS</label>
+            <div className="relative group/input">
+              <label className="absolute left-4 -top-2 text-[8px] px-2 bg-slate-950 text-emerald-400 font-black uppercase tracking-[0.2em] z-10 transition-colors group-focus-within/input:text-white border border-white/5 rounded">DELIVERED PARCELS</label>
               <input 
                 type="number"
                 min="0"
@@ -341,29 +507,38 @@ const RiderDashboard = () => {
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
                 placeholder="Enter delivered parcels" 
-                className="futuristic-input w-full text-base"
+                className="futuristic-input w-full text-lg font-black"
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-blue-600 rounded-3xl p-6 text-white flex flex-col justify-between shadow-[0_0_30px_rgba(59,130,246,0.3)] border border-blue-400/30 overflow-hidden relative group cursor-pointer">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 blur-3xl rounded-full" />
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.25em] opacity-80">Active Hub Status</p>
-            <p className="text-sm mt-1 font-semibold flex items-center gap-2">
-              <Target className="w-4 h-4" /> Hub: Chamba Hub
+        <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 text-white flex flex-col justify-between shadow-[0_20px_40px_rgba(37,99,235,0.2)] border border-blue-400/30 overflow-hidden relative group cursor-pointer h-40">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-white/20 transition-all duration-700" />
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="absolute -bottom-10 -left-10 w-40 h-40 bg-cyan-400/20 blur-3xl rounded-full" 
+          />
+          
+          <div className="relative z-10">
+            <p className="text-[10px] font-black uppercase tracking-[0.25em] opacity-80">Connected Hub</p>
+            <p className="text-lg mt-1 font-black flex items-center gap-2 italic uppercase">
+              <Target className="w-5 h-5 text-cyan-300" /> Chamba Hub
             </p>
           </div>
-          <div className="flex items-center gap-2 mt-8">
-            <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse shadow-[0_0_8px_white]"></div>
-            <p className="text-[10px] font-bold italic uppercase tracking-tighter">Syncing performance metrics...</p>
+          <div className="flex items-center gap-3 mt-8 relative z-10">
+            <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_15px_white]"></div>
+            <p className="text-[10px] font-black italic uppercase tracking-widest text-blue-100">Syncing Node 802...</p>
           </div>
         </div>
       </div>
 
       {/* Main Grid: Stats & Ring */}
-      <div className="lg:col-span-9 grid sm:grid-cols-2 gap-4">
+      <div className="lg:col-span-9 grid sm:grid-cols-2 gap-6 pb-8">
         <MetricCard 
           title="TOTAL PARCELS" 
           value={stats.total} 
@@ -374,65 +549,113 @@ const RiderDashboard = () => {
         
         <SuccessRing percentage={stats.success} />
 
-        <div className="glass-card p-6 flex flex-col justify-between group">
+        <div className="glass-card p-8 flex flex-col justify-between group relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500/0 via-emerald-500/50 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity" />
           <div>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">DELIVERY ATTEMPTS</p>
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">SUCCESSFUL DROPS</p>
+            </div>
             <div className="flex items-baseline gap-2 mt-1">
-              <p className="text-3xl font-bold tracking-tight text-white">{stats.delivered}</p>
-              <p className="text-xs text-emerald-400 font-semibold">Successful drops</p>
+              <p className="text-4xl font-black tracking-tight text-white glow-text italic">
+                <AnimatedCounter value={stats.delivered} />
+              </p>
+              <p className="text-xs text-emerald-400 font-bold uppercase tracking-tighter">Verified Delivery</p>
             </div>
           </div>
-          <div className="mt-4 h-1.5 bg-white/5 rounded-full overflow-hidden">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: `${stats.success}%` }}
-              className="h-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]" 
-            />
+          <div className="mt-8 space-y-2">
+            <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-slate-500">
+               <span>Compliance Level</span>
+               <span>{stats.success.toFixed(1)}%</span>
+            </div>
+            <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${stats.success}%` }}
+                className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.4)]" 
+              />
+            </div>
           </div>
         </div>
 
-        <div className="glass-card p-6 flex flex-col justify-between group">
+        <div className="glass-card p-8 flex flex-col justify-between group relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500/0 via-rose-500/50 to-rose-500/0 opacity-0 group-hover:opacity-100 transition-opacity" />
           <div>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">FAILED PARCELS</p>
+            <div className="flex items-center gap-2 mb-1">
+              <XCircle className="w-4 h-4 text-rose-400" />
+              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">FAILURE PROTOCOL</p>
+            </div>
             <div className="flex items-baseline gap-2 mt-1">
-              <p className="text-3xl font-bold tracking-tight text-white">{stats.failed}</p>
-              <p className="text-xs text-rose-400 font-semibold">Requires attention</p>
+              <p className="text-4xl font-black tracking-tight text-white italic">
+                <AnimatedCounter value={stats.failed} />
+              </p>
+              <p className="text-xs text-rose-400 font-bold uppercase tracking-tighter">Attention Required</p>
             </div>
           </div>
-          <div className="mt-4 h-1.5 bg-white/5 rounded-full overflow-hidden">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: `${Math.min(100, (stats.failed / stats.total) * 100)}%` }}
-              className="h-full bg-rose-500 shadow-[0_0_12px_rgba(239,68,68,0.6)]" 
-            />
+          <div className="mt-8 space-y-2">
+            <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-slate-500">
+               <span>Failure Threshold</span>
+               <span>{stats.total > 0 ? ((stats.failed / stats.total) * 100).toFixed(1) : 0}%</span>
+            </div>
+            <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${stats.total > 0 ? Math.min(100, (stats.failed / stats.total) * 100) : 0}%` }}
+                className="h-full bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]" 
+              />
+            </div>
           </div>
         </div>
 
-        <div className="sm:col-span-2 bg-gradient-to-br from-white/[0.07] to-transparent border border-white/10 rounded-3xl p-6 flex flex-col justify-center items-center text-center group">
-          <div className="px-4 py-1.5 bg-slate-800/80 rounded-full border border-white/10 text-[9px] font-bold text-slate-400 mb-4 uppercase tracking-[0.2em] group-hover:border-primary/30 transition-colors">
-            Current Status
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="sm:col-span-2 bg-gradient-to-br from-slate-900/80 to-background border border-white/10 rounded-[2.5rem] p-10 flex flex-col justify-center items-center text-center group relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-primary/5 blur-3xl -z-10 group-hover:bg-primary/10 transition-colors" />
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.2, 1],
+              rotate: [0, 5, -5, 0]
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+            className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl" 
+          />
+          
+          <div className="px-6 py-2 bg-slate-800/80 rounded-full border border-white/10 text-[10px] font-black text-blue-400 mb-6 uppercase tracking-[0.3em] group-hover:border-primary/50 transition-colors shadow-xl">
+            Live Protocol Status
           </div>
-          <h3 className="text-xl font-bold tracking-tight text-white mb-2 italic">
-            {stats.total > 0 ? stats.rank : "Awaiting Input..."}
+          <h3 className="text-4xl font-display font-black tracking-tighter text-white mb-4 italic uppercase">
+            {stats.total > 0 ? stats.rank : "Awaiting Simulation Data..."}
           </h3>
-          <p className="text-xs text-blue-400 font-medium italic animate-pulse">“{randomMsg}”</p>
-        </div>
-
-        {/* Bottom Wide Bento: What If Analysis */}
-        <div className="sm:col-span-2 bg-gradient-to-br from-slate-900/50 to-background border border-white/10 rounded-3xl p-6 grid sm:grid-cols-2 gap-6">
-          <div className="flex flex-col justify-center gap-1">
-            <span className="text-[9px] text-blue-400 font-black uppercase tracking-[0.3em]">Universal Status Protocol</span>
-            <h2 className="text-lg font-bold leading-tight">Zone Performance Simulation</h2>
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+            <p className="text-sm text-blue-400 font-bold italic">“{randomMsg}”</p>
           </div>
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col justify-center">
-            <p className="text-[8px] text-slate-500 uppercase font-black tracking-widest">Ekart Hub Rank</p>
-            <p className="text-2xl font-display font-black text-white tracking-tighter">#{stats.success > 95 ? "1" : stats.success > 90 ? "2" : stats.success > 80 ? "5" : "--"}</p>
-            <p className="text-[9px] text-slate-400 italic mt-1 font-medium">Est. position in Zone</p>
+        </motion.div>
+
+        {/* Bottom Wide Bento: Fleet Analysis */}
+        <div className="sm:col-span-2 bg-gradient-to-br from-slate-900/50 to-background border border-white/10 rounded-[2.5rem] p-8 grid sm:grid-cols-2 gap-8 items-center shadow-2xl">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+               <ShieldCheck className="w-4 h-4 text-blue-400" />
+               <span className="text-[10px] text-blue-400 font-black uppercase tracking-[0.4em]">Fleet Performance Protocol</span>
+            </div>
+            <h2 className="text-2xl font-display font-black leading-tight text-white uppercase italic tracking-tight">Zone Operations Intelligence</h2>
+            <p className="text-xs text-slate-500 font-medium">Real-time performance algorithm active across all hub nodes.</p>
+          </div>
+          <div className="bg-slate-950/50 border border-white/5 rounded-3xl p-6 flex items-center justify-between group hover:border-primary/30 transition-all">
+            <div>
+              <p className="text-[10px] text-slate-500 uppercase font-black tracking-[0.2em] mb-1">Operational Rank</p>
+              <p className="text-4xl font-display font-black text-white tracking-tighter glow-text italic">#{stats.success > 95 ? "1" : stats.success > 90 ? "2" : stats.success > 80 ? "5" : "--"}</p>
+            </div>
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:scale-110 transition-transform">
+               <TrendingUp className="w-6 h-6 text-primary" />
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   );
 };
 
@@ -539,7 +762,21 @@ interface ManagedRider {
 const TeamLeaderDashboard = () => {
   const [riders, setRiders] = useState<ManagedRider[]>(() => {
     const saved = localStorage.getItem('managed_riders');
-    if (!saved) return [];
+    if (!saved) {
+      // Seed with initial riders converted to managed format
+      return INITIAL_RIDERS.map(r => ({
+        id: r.id,
+        name: r.name,
+        history: [{
+          date: new Date().toLocaleDateString(),
+          total: r.totalParcels,
+          delivered: r.deliveredParcels,
+          failed: r.failedParcels,
+          rate: r.successRate
+        }],
+        joinedAt: new Date().toISOString()
+      }));
+    }
     
     // Prune history older than 7 days on load
     const parsedRiders: ManagedRider[] = JSON.parse(saved);
@@ -559,16 +796,47 @@ const TeamLeaderDashboard = () => {
       }).slice(0, 7) // Always keep max 7 items
     }));
   });
+
   const [newRiderName, setNewRiderName] = useState('');
   const [selectedRider, setSelectedRider] = useState<ManagedRider | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [riderInputs, setRiderInputs] = useState<Record<string, { total: string; delivered: string }>>({});
+  const [riderInputs, setRiderInputs] = useState<Record<string, { total: string; delivered: string }>>(() => {
+    const saved = localStorage.getItem('rider_inputs');
+    return saved ? JSON.parse(saved) : {};
+  });
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isSaved, setIsSaved] = useState(true);
+  
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState('');
+
+  const saveRiderName = () => {
+    if (!tempName.trim() || !selectedRider) return;
+    setRiders(prev => prev.map(r => 
+      r.id === selectedRider.id ? { ...r, name: tempName.trim() } : r
+    ));
+    setSelectedRider(prev => prev ? { ...prev, name: tempName.trim() } : null);
+    setIsEditingName(false);
+  };
 
   useEffect(() => {
-    localStorage.setItem('managed_riders', JSON.stringify(riders));
+    setIsSaved(false);
+    const timer = setTimeout(() => {
+      localStorage.setItem('managed_riders', JSON.stringify(riders));
+      setIsSaved(true);
+    }, 500);
+    return () => clearTimeout(timer);
   }, [riders]);
+
+  useEffect(() => {
+    setIsSaved(false);
+    const timer = setTimeout(() => {
+      localStorage.setItem('rider_inputs', JSON.stringify(riderInputs));
+      setIsSaved(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [riderInputs]);
 
   const addRider = () => {
     if (!newRiderName.trim()) return;
@@ -617,30 +885,50 @@ const TeamLeaderDashboard = () => {
   };
 
   const getLatestStats = (rider: ManagedRider) => {
-    return rider.history[0] || { delivered: 0, total: 0, rate: 0 };
+    return rider.history[0] || { delivered: 0, total: 0, rate: 0, failed: 0 };
   };
 
   const fleetStats = {
     total: riders.reduce((acc, r) => acc + (r.history[0]?.total || 0), 0),
     delivered: riders.reduce((acc, r) => acc + (r.history[0]?.delivered || 0), 0),
+    failed: riders.reduce((acc, r) => acc + (r.history[0]?.failed || 0), 0),
     avgRate: riders.length > 0 
       ? riders.reduce((acc, r) => acc + (r.history[0]?.rate || 0), 0) / riders.length 
-      : 0
+      : 0,
+    earnings: riders.reduce((acc, r) => acc + (r.history[0]?.delivered || 0) * 40, 0),
+    bestRider: riders.length > 0 ? [...riders].sort((a,b) => (b.history[0]?.rate || 0) - (a.history[0]?.rate || 0))[0].name : "N/A",
+    bestRiderRate: riders.length > 0 ? (riders.sort((a,b) => (b.history[0]?.rate || 0) - (a.history[0]?.rate || 0))[0].history[0]?.rate || 0).toFixed(1) : "0",
+    weakestRider: riders.length > 0 ? [...riders].sort((a,b) => (a.history[0]?.rate || 0) - (b.history[0]?.rate || 0))[0].name : "N/A",
   };
+
+  const riderOfTheWeek = riders.length > 0 ? [...riders].sort((a, b) => {
+    const sA = a.history[0] || { rate: 0, total: 0, failed: 0 };
+    const sB = b.history[0] || { rate: 0, total: 0, failed: 0 };
+    // Score = rate - (failed * 2) + (total / 10)
+    const scoreA = sA.rate - (sA.failed * 2) + (sA.total / 10);
+    const scoreB = sB.rate - (sB.failed * 2) + (sB.total / 10);
+    return scoreB - scoreA;
+  })[0] : null;
 
   const sortedRiders = [...riders].sort((a, b) => getLatestStats(b).rate - getLatestStats(a).rate);
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-[1400px] mx-auto px-4 py-8 space-y-8 relative">
+      <div className="absolute top-2 right-4 flex items-center gap-1.5 opacity-60">
+        <div className={cn("w-1.5 h-1.5 rounded-full", isSaved ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : "bg-amber-500 animate-pulse")} />
+        <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+          {isSaved ? "Data Saved" : "Saving..."}
+        </span>
+      </div>
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h2 className="text-4xl font-display font-black tracking-tighter uppercase italic">
             Strategic <span className="text-primary italic glow-text">Operations</span>
           </h2>
           <div className="flex items-center gap-2 mt-1">
-            <p className="text-slate-500 font-mono text-[10px] uppercase tracking-[0.3em]">Field Logistics Protocol v2.5.0</p>
+            <p className="text-slate-500 font-mono text-[10px] uppercase tracking-[0.3em]">Field Logistics Protocol v2.6.0</p>
             <span className="text-[8px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full border border-amber-500/20 font-black uppercase">
-              7D Retention Active
+              Operational Intelligence Active
             </span>
           </div>
         </div>
@@ -659,7 +947,18 @@ const TeamLeaderDashboard = () => {
         </div>
       </header>
 
-      {/* Fleet Analysis Board (Top Section) */}
+      <section className="space-y-8">
+        <RiderOfTheWeek rider={riderOfTheWeek} />
+        
+        <div className="space-y-4">
+          <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
+            <BarChart4 className="w-4 h-4 text-primary" /> Today's Performance Summary
+          </h3>
+          <TodaySummary stats={fleetStats} />
+        </div>
+      </section>
+
+      {/* Fleet Analysis Board (Middle Section) */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
@@ -853,6 +1152,21 @@ const TeamLeaderDashboard = () => {
           {sortedRiders.map((rider) => {
             const stats = getLatestStats(rider);
             const currentInputs = riderInputs[rider.id] || { total: '', delivered: '' };
+            const earnings = stats.delivered * 40;
+            const pressure = stats.total > 0 ? Math.min(100, (stats.total / 150) * 100) : 0;
+            
+            let badge = "STANDBY";
+            let badgeColor = "text-slate-400 bg-slate-500/10 border-slate-500/20";
+            if (stats.rate >= 95) {
+              badge = "ELITE";
+              badgeColor = "text-amber-400 bg-amber-500/10 border-amber-500/20";
+            } else if (stats.rate >= 90) {
+              badge = "PRO";
+              badgeColor = "text-blue-400 bg-blue-500/10 border-blue-500/20";
+            } else if (stats.rate >= 80) {
+              badge = "FAST";
+              badgeColor = "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+            }
 
             return (
               <motion.div 
@@ -860,7 +1174,7 @@ const TeamLeaderDashboard = () => {
                 layoutId={rider.id}
                 whileHover={{ scale: 1.03, y: -5 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="glass-card p-6 flex flex-col gap-6 relative group overflow-hidden border-white/5 hover:border-primary/30 transition-all"
+                className="glass-card p-6 flex flex-col gap-6 relative group overflow-hidden border-white/5 hover:border-primary/30 transition-all bg-gradient-to-br from-white/[0.03] to-transparent"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
                 
@@ -869,65 +1183,65 @@ const TeamLeaderDashboard = () => {
                     className="flex items-center gap-3 cursor-pointer"
                     onClick={() => setSelectedRider(rider)}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
-                      <span className="text-sm font-black text-primary">{rider.name.charAt(0)}</span>
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center border border-white/10 group-hover:border-primary/50 transition-colors">
+                        <span className="text-lg font-black text-white">{rider.name.charAt(0)}</span>
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#020617] items-center justify-center flex">
+                        <div className="w-1 h-1 bg-white rounded-full animate-ping"></div>
+                      </div>
                     </div>
                     <div>
-                      <h4 className="text-lg font-black text-white group-hover:text-primary transition-colors">{rider.name}</h4>
-                      <span className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">ID: {rider.id.slice(-4)}</span>
+                      <h4 className="text-lg font-black text-white group-hover:text-primary transition-colors flex items-center gap-2">
+                        {rider.name}
+                        {stats.rate >= 95 && <Crown className="w-3 h-3 text-amber-500" />}
+                      </h4>
+                      <div className="flex items-center gap-2">
+                        <span className={cn("text-[8px] font-black px-2 py-0.5 rounded border uppercase tracking-widest", badgeColor)}>{badge}</span>
+                        <span className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">#{rider.id.slice(-3)}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right flex flex-col items-end gap-2">
-                    <div>
-                      <p className="text-[9px] text-emerald-400 font-bold uppercase tracking-widest">Success</p>
-                      <p className="text-xl font-black text-white">{stats.rate.toFixed(1)}%</p>
+                  <div className="text-right">
+                    <p className="text-[9px] text-emerald-400 font-bold uppercase tracking-widest">Fulfillment</p>
+                    <p className="text-2xl font-black text-white">{stats.rate.toFixed(1)}%</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 relative z-10">
+                  <div className="bg-white/5 p-3 rounded-xl border border-white/5">
+                    <div className="flex items-center gap-2 mb-1">
+                      <AlertTriangle className="w-3 h-3 text-rose-400" />
+                      <span className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Failed Parcels</span>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <AnimatePresence mode="wait">
-                        {deletingId === rider.id ? (
-                          <motion.div 
-                            key="confirm-card"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
-                            className="flex items-center gap-2"
-                          >
-                            <button 
-                              onClick={(e) => { e.stopPropagation(); setDeletingId(null); }}
-                              className="text-[9px] font-black text-slate-500 hover:text-white uppercase tracking-tighter"
-                            >
-                              No
-                            </button>
-                            <button 
-                              onClick={(e) => { e.stopPropagation(); deleteRider(rider.id); }}
-                              className="px-3 py-1 bg-rose-600 text-white text-[9px] font-black uppercase rounded-lg shadow-lg hover:bg-rose-500"
-                            >
-                              Confirm Delete
-                            </button>
-                          </motion.div>
-                        ) : (
-                          <motion.button 
-                            key="delete-card"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setDeletingId(rider.id);
-                            }}
-                            className="p-2 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all border border-rose-500/20 shadow-sm"
-                            title="Delete Rider"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </motion.button>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                    <p className="text-sm font-black text-white">{stats.failed} Dropped</p>
+                  </div>
+                </div>
+
+                {/* Pressure Meter */}
+                <div className="space-y-1 relative z-10">
+                  <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest">
+                    <span className="text-slate-500">Pressure Meter</span>
+                    <span className={cn(
+                      pressure > 80 ? "text-rose-400" : pressure > 50 ? "text-orange-400" : "text-emerald-400"
+                    )}>
+                      {pressure > 80 ? "CRITICAL" : pressure > 50 ? "MODERATE" : "STABLE"}
+                    </span>
+                  </div>
+                  <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden border border-white/5">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${pressure}%` }}
+                      className={cn(
+                        "h-full shadow-[0_0_8px_rgba(0,0,0,0.5)]",
+                        pressure > 80 ? "bg-rose-500" : pressure > 50 ? "bg-orange-500" : "bg-emerald-500"
+                      )}
+                    />
                   </div>
                 </div>
 
                 {/* Inline Input Section */}
-                <div className="relative z-10 space-y-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                <div className="relative z-10 space-y-4 bg-white/5 p-4 rounded-2xl border border-white/5 group-hover:border-primary/20 transition-all">
                   <div className="flex items-center justify-between">
                     <h5 className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Daily Log Entry</h5>
                     <span className="text-[10px] font-bold text-slate-400">ZONE {rider.id.slice(-2)} Sync</span>
@@ -1029,11 +1343,64 @@ const TeamLeaderDashboard = () => {
                 </div>
 
                 <div className="pt-2 flex items-center justify-between text-[10px] relative z-10">
-                  <span className="text-slate-500 font-black uppercase">Weekly Status</span>
-                  <div className="flex gap-1">
-                    {[...Array(7)].map((_, i) => (
-                      <div key={i} className={`w-1.5 h-4 rounded-full ${rider.history[i] ? 'bg-emerald-500' : 'bg-white/5'}`} />
+                  <span className="text-slate-500 font-black uppercase flex items-center gap-2">
+                    <TrendingUp className="w-3 h-3" /> Weekly Trend
+                  </span>
+                  <div className="flex items-end gap-1 h-6">
+                    {([...rider.history].reverse().concat([...Array(7)].map(() => null))).slice(0,7).map((h: any, i) => (
+                      <motion.div 
+                        key={i} 
+                        initial={{ height: 0 }}
+                        animate={{ height: h ? `${(h.rate / 100) * 24}px` : '4px' }}
+                        className={cn(
+                          "w-1.5 rounded-full transition-all",
+                          h ? (h.rate >= 90 ? 'bg-emerald-500' : 'bg-blue-500') : 'bg-white/5'
+                        )} 
+                      />
                     ))}
+                  </div>
+                </div>
+                
+                <div className="absolute bottom-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex flex-col items-end">
+                    <AnimatePresence mode="wait">
+                      {deletingId === rider.id ? (
+                        <motion.div 
+                          key="confirm-card"
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 20 }}
+                          className="flex items-center gap-2 mb-2"
+                        >
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setDeletingId(null); }}
+                            className="text-[9px] font-black text-slate-500 hover:text-white uppercase tracking-tighter"
+                          >
+                            No
+                          </button>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); deleteRider(rider.id); }}
+                            className="px-3 py-1 bg-rose-600 text-white text-[9px] font-black uppercase rounded-lg shadow-lg hover:bg-rose-500"
+                          >
+                            Purge
+                          </button>
+                        </motion.div>
+                      ) : (
+                        <motion.button 
+                          key="delete-card"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeletingId(rider.id);
+                          }}
+                          className="p-1.5 rounded bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all border border-rose-500/20"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </motion.button>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               </motion.div>
@@ -1058,7 +1425,51 @@ const TeamLeaderDashboard = () => {
                     <span className="text-2xl font-black text-white">{selectedRider.name.charAt(0)}</span>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-black text-white uppercase italic">{selectedRider.name}</h3>
+                    {isEditingName ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          autoFocus
+                          value={tempName}
+                          onChange={(e) => setTempName(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && saveRiderName()}
+                          className="bg-white/10 border border-primary/50 text-white text-xl font-black px-3 py-1 rounded-lg outline-none focus:ring-2 focus:ring-primary/30"
+                        />
+                        <button 
+                          onClick={saveRiderName}
+                          className="p-2 bg-emerald-500 rounded-lg text-white hover:bg-emerald-400 transition-colors"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => setIsEditingName(false)}
+                          className="p-2 bg-rose-500 rounded-lg text-white hover:bg-rose-400 transition-colors"
+                        >
+                          <XCircle className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <h3 
+                          className="text-3xl font-display font-black text-white uppercase italic cursor-pointer hover:text-primary transition-colors"
+                          onClick={() => {
+                            setTempName(selectedRider.name);
+                            setIsEditingName(true);
+                          }}
+                        >
+                          {selectedRider.name}
+                        </h3>
+                        <button 
+                           onClick={() => {
+                             setTempName(selectedRider.name);
+                             setIsEditingName(true);
+                           }}
+                           className="p-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white transition-colors"
+                           title="Edit Name"
+                        >
+                          <Package className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
                     <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em] font-black">History Overview</p>
                   </div>
                 </div>
@@ -1135,7 +1546,7 @@ const Footer = () => (
 
     <div className="max-w-2xl text-center px-6">
       <p className="text-[11px] text-slate-500 font-medium leading-relaxed tracking-wide italic">
-        "Empowering the delivery force with precision simulation and real-time performance analytics. ParcelPulse is the definitive tool for riders seeking operational excellence in the modern logistics landscape."
+        "Empowering the delivery force with precision simulation and real-time performance analytics. ParcelPulseByJayShankar is the definitive tool for riders seeking operational excellence in the modern logistics landscape."
       </p>
     </div>
 
@@ -1143,8 +1554,8 @@ const Footer = () => (
       <div className="flex items-center gap-2 group cursor-pointer transition-transform hover:scale-110">
         <Package className="w-5 h-5 text-primary group-hover:animate-bounce" />
         <div className="flex flex-col gap-0 text-left">
-          <span className="text-lg font-black tracking-tight text-gradient-yb leading-none">PARCELPULSE</span>
-          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest ml-0.5 leading-none mt-1">Made By Jay Shankar</span>
+          <span className="text-lg font-black tracking-tight text-gradient-yb leading-none uppercase">PARCELPULSE BY JAY SHANKAR</span>
+          <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest ml-0.5 leading-none mt-1">Official Platform</span>
         </div>
       </div>
       <p className="text-slate-500 text-[10px] font-medium tracking-widest uppercase">
@@ -1177,8 +1588,12 @@ const Footer = () => (
 
 export default function App() {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("rider");
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem('active_tab') || "rider");
   const [showProfile, setShowProfile] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('active_tab', activeTab);
+  }, [activeTab]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

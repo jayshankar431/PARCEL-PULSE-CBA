@@ -9,6 +9,9 @@ export const INITIAL_RIDERS: RiderStats[] = [
     successRate: 98.3,
     failedParcels: 2,
     rank: "Team Leader",
+    earnings: 4500,
+    pressure: 15,
+    trend: [95, 96, 98, 97, 99, 98, 98.3],
   },
   {
     id: "2",
@@ -18,6 +21,9 @@ export const INITIAL_RIDERS: RiderStats[] = [
     successRate: 92.7,
     failedParcels: 8,
     rank: "Pro Rider",
+    earnings: 3800,
+    pressure: 45,
+    trend: [88, 90, 92, 91, 93, 92, 92.7],
   },
   {
     id: "3",
@@ -27,6 +33,9 @@ export const INITIAL_RIDERS: RiderStats[] = [
     successRate: 90.5,
     failedParcels: 10,
     rank: "Pro Rider",
+    earnings: 3500,
+    pressure: 60,
+    trend: [85, 87, 89, 90, 92, 91, 90.5],
   },
   {
     id: "4",
@@ -36,6 +45,9 @@ export const INITIAL_RIDERS: RiderStats[] = [
     successRate: 82.1,
     failedParcels: 17,
     rank: "Fast Mover",
+    earnings: 2800,
+    pressure: 80,
+    trend: [75, 78, 80, 79, 81, 82, 82.1],
   },
   {
     id: "5",
@@ -45,6 +57,9 @@ export const INITIAL_RIDERS: RiderStats[] = [
     successRate: 75.0,
     failedParcels: 25,
     rank: "Needs Improvement",
+    earnings: 2200,
+    pressure: 90,
+    trend: [70, 72, 74, 73, 75, 76, 75.0],
   },
 ];
 

@@ -8,6 +8,9 @@ export interface RiderStats {
   successRate: number;
   failedParcels: number;
   rank: RiderRank;
+  earnings: number;
+  pressure: number; // 0-100
+  trend: number[]; // Last 7 days success rates
 }
 
 export interface TeamStats {
