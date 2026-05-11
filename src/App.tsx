@@ -40,7 +40,7 @@ import {
   Pie
 } from "recharts";
 import { cn } from "./lib/utils";
-import { INITIAL_RIDERS, SMART_MESSAGES } from "./constants";
+import { SMART_MESSAGES } from "./constants";
 import { RiderStats, RiderRank } from "./types";
 
 // --- Components ---
@@ -763,19 +763,7 @@ const TeamLeaderDashboard = () => {
   const [riders, setRiders] = useState<ManagedRider[]>(() => {
     const saved = localStorage.getItem('managed_riders');
     if (!saved) {
-      // Seed with initial riders converted to managed format
-      return INITIAL_RIDERS.map(r => ({
-        id: r.id,
-        name: r.name,
-        history: [{
-          date: new Date().toLocaleDateString(),
-          total: r.totalParcels,
-          delivered: r.deliveredParcels,
-          failed: r.failedParcels,
-          rate: r.successRate
-        }],
-        joinedAt: new Date().toISOString()
-      }));
+      return [];
     }
     
     // Prune history older than 7 days on load
@@ -798,6 +786,7 @@ const TeamLeaderDashboard = () => {
   });
 
   const [newRiderName, setNewRiderName] = useState('');
+  const [riderError, setRiderError] = useState<string | null>(null);
   const [selectedRider, setSelectedRider] = useState<ManagedRider | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [riderInputs, setRiderInputs] = useState<Record<string, { total: string; delivered: string }>>(() => {
@@ -840,6 +829,14 @@ const TeamLeaderDashboard = () => {
 
   const addRider = () => {
     if (!newRiderName.trim()) return;
+    
+    // Block Team Leader from being added as a rider
+    if (newRiderName.trim().toLowerCase() === "sonu thakur") {
+      setRiderError("Team Leader cannot be added as a rider.");
+      setTimeout(() => setRiderError(null), 3000);
+      return;
+    }
+    
     const newRider: ManagedRider = {
       id: Date.now().toString(),
       name: newRiderName,
@@ -1122,6 +1119,15 @@ const TeamLeaderDashboard = () => {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowAddForm(false)} className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100]" />
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm glass-card border-primary/20 p-8 z-[101]">
               <h3 className="text-xl font-black mb-6 uppercase italic text-primary">New Security Link</h3>
+              {riderError && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="bg-rose-500/10 border border-rose-500/20 rounded-lg p-3 mb-4 text-[10px] font-bold text-rose-400 uppercase tracking-widest text-center"
+                >
+                  {riderError}
+                </motion.div>
+              )}
               <input 
                 type="text" 
                 value={newRiderName}
