@@ -1565,7 +1565,7 @@ const Footer = () => (
 
     <div className="flex flex-wrap justify-center gap-8 mt-4">
       {[
-        { label: "Contact", href: "tel:9817905531" },
+        { label: "Contact", href: "https://wa.me/919817905531" },
         { label: "Facebook", href: "https://facebook.com/jayshankar0431" },
         { label: "Instagram", href: "https://instagram.com/jayshankar431" },
         { label: "Gmail", href: "mailto:jayshankar431@gmail.com" }
@@ -1573,7 +1573,7 @@ const Footer = () => (
         <a 
           key={link.label} 
           href={link.href}
-          target={link.label === "Contact" || link.label === "Gmail" ? undefined : "_blank"}
+          target="_blank"
           rel="noopener noreferrer"
           className="text-[10px] text-slate-700 uppercase tracking-[0.2em] font-black hover:text-primary transition-colors cursor-pointer"
         >
